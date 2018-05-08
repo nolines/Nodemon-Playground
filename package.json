@@ -1,0 +1,19 @@
+{
+  "name": "rest playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.16",
+    "global-tunnel": "^1.2.0"
+  },"devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "author": "nolines",
+  "license": "ISC"
+}
