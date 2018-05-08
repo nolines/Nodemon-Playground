@@ -1,7 +1,13 @@
 // server.js
-const express = require('express');
-const MongoClient = require('mongodb').MongoClient;
-const bodyParser = require('body-parser');
+var express = require('express');
+var path = require('path');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var http = require('http');
+var mongoose = require('mongoose');
+
+var routes = require('./app/routes/index');
 
 const db = require('./config/db');
 const app = express();
@@ -10,39 +16,25 @@ const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-MongoClient.connect(db.url, (err, database) => {
-    if (err) return console.log(err)
+mongoose.connect(db.url, function (err, res) {
+    if (err) {
+        console.log('Error connecting to the database. ' + err);
+    } else {
+        console.log('Connected to Database: ' + db.url);
+    }
+});
 
-    dba = database.db("note-api")
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, '../client/public')));
 
-    require('./app/routes')(app, dba);
-    app.listen(port, () => {
-        console.log('We are live on ' + port);
-    });
-})
+app.use('/', routes);
 
-// MongoClient.connect('mongodb://127.0.0.1:27017/playground', (err, db) => {
-//     if (err) {
-//         return console.log("HATA!" + err);
-//     }
+var server = http.createServer(app);
+server.listen(port, function () {
+    console.log("Node server running on http://localhost:" + port);
+});
 
-//     // Do something with db here, like inserting a record
-//     db.collection('notes').insertOne(
-//         {
-//             title: 'Hello MongoDB',
-//             text: 'Hopefully this works!'
-//         },
-//         function (err, res) {
-//             if (err) {
-//                 db.close();
-//                 return console.log(err);
-//             }
-//             // Success
-//             db.close();
-//         }
-//     )
-// });
-
-// app.listen(port, () => {
-//     console.log('Listening on ' + port);
-// });
+module.exports = app;
