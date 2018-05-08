@@ -25,6 +25,15 @@ module.exports = function (app, db) {
             }
         });
     });
+    app.get('/notes', (req, res) => {
+        db.collection("customers").find({}).toArray(function (err, item) {
+            if (err) {
+                res.send({ 'error': 'An error has occurred' });
+            } else {
+                res.send(item);
+            }
+        });
+    });
     app.delete('/notes/:id', (req, res) => {
         const id = req.params.id;
         const details = {
