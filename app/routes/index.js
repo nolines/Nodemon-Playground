@@ -7,6 +7,9 @@ route.get('/', function (req, res, next) {
     res.send('default route');
 });
 
+route.get('/', (req, res) => {
+    res.sendFile("/app/views/main.html");
+})
 route.get('/notes', findAllNotes);
 route.get('/notes/:id', findNoteById);
 route.post('/notes', addNote);
